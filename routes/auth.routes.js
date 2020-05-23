@@ -1,7 +1,10 @@
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
+const config = require("config");
 const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+
 const router = Router();
 
 const hashSalt = 12;
@@ -49,40 +52,49 @@ router.post(
   }
 );
 router.post(
-  "/login", 
+  "/login",
   [
-    check('email', 'Введите корректный email').normalizeEmail().isEmail(),
-    check('password', 'Введите пароль').exists()
+    check("email", "Введите корректный email").normalizeEmail().isEmail(),
+    check("password", "Введите пароль").exists(),
   ],
-async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    const { email, password } = req.body;
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      const { email, password } = req.body;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-        message: "Некорректные данные при входе в систему",
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          errors: errors.array(),
+          message: "Некорректные данные при входе в систему",
+        });
+      }
+
+      const { email, password } = req.body;
+
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(400).json({ message: "Пользователь не найден" });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ message: "Неверный пароль, попробуйте снова" });
+      }
+
+      const token = jwt.sign({ userId: user.id }, config.get("jwtSecret"), {
+        expiresIn: "1h",
       });
+      res.json({token, userId: user.id});
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Что-то пошло не так, попробуйте снова" });
     }
-
-    const {email, password} = req.body
-
-    const user = await User.findOne({email})
-
-    if (!user) {
-      return res.status(400).json({message: 'Пользователь не найден'})
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password)
-
-    if (!isMatch) {
-      return res.status(400).json({message: 'Неверный пароль, попробуйте снова'})
-    }
-
-  } catch (error) {
-    res.status(500).json({ message: "Что-то пошло не так, попробуйте снова" });
   }
-});
+);
 
 module.exports = router;
