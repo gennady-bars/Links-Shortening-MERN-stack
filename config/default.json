@@ -1,3 +1,4 @@
 {
-  "port": 5000
+  "port": 5000,
+  "mongoUri": "mongodb+srv://Gena:Gena1981@cluster0-xakqu.mongodb.net/app?retryWrites=true&w=majority"
 }
