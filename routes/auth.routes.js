@@ -60,7 +60,6 @@ router.post(
   async (req, res) => {
     try {
       const errors = validationResult(req);
-      const { email, password } = req.body;
 
       if (!errors.isEmpty()) {
         return res.status(400).json({
