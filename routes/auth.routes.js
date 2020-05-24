@@ -21,7 +21,7 @@ router.post(
   async (req, res) => {
     try {
       const errors = validationResult(req);
-      const { email, password } = req.body;
+      const { email, password, name } = req.body;
 
       if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -39,7 +39,8 @@ router.post(
       }
 
       const hashedPassword = await bcrypt.hash(password, hashSalt);
-      const user = new User({ email, password: hashedPassword });
+      const user = new User({ email, password: hashedPassword, name: name || 'Guest' });
+      
 
       await user.save();
 
@@ -87,7 +88,7 @@ router.post(
       const token = jwt.sign({ userId: user.id }, config.get("jwtSecret"), {
         expiresIn: "1h",
       });
-      res.json({token, userId: user.id});
+      res.json({token, userId: user.id, name: user.name});
     } catch (error) {
       res
         .status(500)
