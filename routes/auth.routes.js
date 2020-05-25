@@ -5,12 +5,12 @@ const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const router = Router();
+const authRouter = Router();
 
 const hashSalt = 12;
 
 // /api/auth - root
-router.post(
+authRouter.post(
   "/register",
   [
     check("email", "Некорректный email").isEmail(),
@@ -52,7 +52,7 @@ router.post(
     }
   }
 );
-router.post(
+authRouter.post(
   "/login",
   [
     check("email", "Введите корректный email").normalizeEmail().isEmail(),
@@ -97,4 +97,4 @@ router.post(
   }
 );
 
-module.exports = router;
+module.exports = authRouter;
