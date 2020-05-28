@@ -1,8 +1,9 @@
-import React, { useState, useCallback, useContext, useEffect } from "react";
+import React, { useState, useCallback, useContext, useEffect, Fragment } from "react";
 import { useParams } from "react-router-dom";
 import { useHttp } from "../hooks/http.hook";
 import { AuthContext } from "../context/AuthContext";
 import Loader from '../components/Loader'
+import LinkCard from "../components/LinkCard";
 
 const DetailPage = () => {
   const { token } = useContext(AuthContext);
@@ -28,9 +29,9 @@ const DetailPage = () => {
       return <Loader/>
   }
   return (
-    <div>
-      <h1>Detail Page</h1>
-    </div>
+    <Fragment>
+      {!loading && link && <LinkCard link={link}/>}
+    </Fragment>
   );
 };
 
