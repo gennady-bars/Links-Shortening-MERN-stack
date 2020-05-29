@@ -1,2 +1,2 @@
 # Links-Shortening-MERN-stack
-Links shortening service full-stack app
+Links shortening service using MongoDB Atlas (+ Mongoose), Express, React (React Hooks) + Node.js
