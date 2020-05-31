@@ -1,6 +1,6 @@
 {
   "port": 5000,
-  "mongoUri": "mongodb+srv://Gena:Gena1981@cluster0-xakqu.mongodb.net/app?retryWrites=true&w=majority",
-  "jwtSecret": "Gena MERN",
+  "mongoUri": "mongodb+srv://your mongo link here from Atlas or local MongoDB",
+  "jwtSecret": "secret word",
   "baseUrl": "http://localhost:5000"
 }
